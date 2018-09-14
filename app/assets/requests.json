@@ -1,0 +1,11 @@
+{
+    "baseUrl": "https://ivideoreg.herokuapp.com/",
+    "login": {
+        "urlpart": "api/Security/login",
+        "method": "POST",
+        "body": {
+            "username": "%s",
+            "password": "%s"
+        }
+    }
+}
