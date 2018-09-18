@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.example.i20088.iconsultapp.Delegates.UserResponse;
+import com.example.i20088.iconsultapp.Manager.PatientManager;
+import com.example.i20088.iconsultapp.Model.Patient;
 import com.example.i20088.iconsultapp.Model.User;
+import com.example.i20088.iconsultapp.Parsers.PatientParser;
 import com.example.i20088.iconsultapp.Parsers.UserParser;
 
 import org.json.JSONException;
@@ -61,6 +64,31 @@ public class NetworkManager implements NetworkTaskResult {
             e.printStackTrace();
         }
     }
+    public void requetCreatePatient(String firstname, String lastname,String email,String password,String phone,String gpsurgery,String gpsurgpnamegery,String remarks) {
+        JSONObject jsonObject = ApiLookupUtil.lookUpRequest(context, RequestType.userCreation);
+        try {
+            System.out.println("Request create patient -------------- starated");
+            String urlpart = jsonObject.getString(URL_PART_KEY);
+            String httpMethod = jsonObject.getString(HTTP_METHOD_KEY);
+            JSONObject object = jsonObject.getJSONObject(HTTP_BODY_KEY);
+            object.put("firstname", firstname);
+            object.put("lastname", lastname);
+            object.put("email", email);
+            object.put("password", password);
+            object.put("phone", phone);
+            object.put("gpsurgery", gpsurgery);
+            object.put("gpsurgpnamegery", gpsurgpnamegery);
+            object.put("remarks", remarks);
+
+            String completApiUrl = getBaseUrl()+urlpart;
+            String bodyString = object.toString();
+
+            new NetworkTask(this).execute(RequestType.userCreation.name(), httpMethod, completApiUrl, bodyString);
+            System.out.println("Request create patient -------------- ended");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     public void networkResponse(RequestType requestType, JSONObject jsonObject) {
         Log.d("ManagerTask", jsonObject.toString());
         switch (requestType) {
@@ -69,6 +97,13 @@ public class NetworkManager implements NetworkTaskResult {
                 if (user != null) {
                     ((UserResponse) context).didGetUser(user);
                 }
+                break;
+            case userCreation:
+                Patient createPatient = PatientParser.parse(jsonObject);
+                PatientManager.getInstance().setPatient(createPatient);
+                Intent patientIntent = new Intent();
+                patientIntent.setAction("setPatientState");
+                context.sendBroadcast(patientIntent);
                 break;
             default:
                 break;

@@ -7,5 +7,19 @@
             "username": "%s",
             "password": "%s"
         }
+    },
+    "userCreation": {
+        "urlpart": "api/User/Create",
+        "method": "POST",
+        "body": {
+            "firstname": "%s",
+            "lastname": "%s",
+            "email": "%s",
+            "password": "%s",
+            "phone" : "%s",
+            "gpsurgery": "%s",
+            "gpname": "%s",
+            "remarks": "%s"
+        }
     }
 }

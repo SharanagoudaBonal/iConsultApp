@@ -1,7 +1,9 @@
 package com.example.i20088.iconsultapp.Network;
 
 public enum RequestType {
-    login;
+    login,
+    userCreation;
+
 
     public static RequestType getRequestType(String name) {
         RequestType type = null;
@@ -9,6 +11,9 @@ public enum RequestType {
             case "login":
                 type = login;
                 break;
+            case "userCreation":
+                 type = userCreation;
+                 break;
             default:
                 break;
         }

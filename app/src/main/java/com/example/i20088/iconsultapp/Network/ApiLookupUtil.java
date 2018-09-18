@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
 public class ApiLookupUtil {
     public static final String baseUrlKey = "baseUrl";
     private static final String loginKey = "login";
-
+    private static final String userCreationKey = "userCreation";
     public static String getBaseUrl(Context context){
         String baseUrl=null;
         JSONObject requests = loadRequestsAsset(context);
@@ -30,6 +30,9 @@ public class ApiLookupUtil {
             switch (requestType){
                 case login:
                     jsonTypeObject = getRequestJson(requests, loginKey);
+                    break;
+                case userCreation:
+                    jsonTypeObject = getRequestJson(requests, userCreationKey);
                     break;
                     default:
                         break;

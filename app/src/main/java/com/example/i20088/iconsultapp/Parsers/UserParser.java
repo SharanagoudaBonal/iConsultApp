@@ -10,6 +10,36 @@ public class UserParser {
     public static User parse(JSONObject json) {
         User user = null;
         try {
+                String userId = json.isNull("userId") ? null : json.getString("userId");
+                String firstName = json.isNull("firstname") ? "" : json.getString("firstname");
+                String lastName = json.isNull("lastname") ? "" : json.getString("lastname");
+                String email = json.isNull("email") ? "" : json.getString("email");
+                String phone = json.isNull("phone") ? "" : json.getString("phone");
+                String status = json.isNull("status") ? "" : json.getString("status");
+                String gpsurgery = json.isNull("gpsurgery") ? "" : json.getString("gpsurgery");
+                String gpsurgpnamegery = json.isNull("gpsurgpnamegery") ? "" : json.getString("gpsurgpnamegery");
+                //  String userType = jsonObject.isNull("userType") ? "" : jsonObject.getString("userType");
+                String remarks = json.isNull("remarks") ? "" : json.getString("remarks");
+
+                user = new User();
+                user.setUserId(userId);
+                user.setFirstName(firstName);
+                user.setLastName(lastName);
+                user.setEmail(email);
+                user.setPhone(phone);
+                user.setStatus(status);
+                user.setGpsurgery(gpsurgery);
+                user.setGpsurgpnamegery(gpsurgpnamegery);
+                user.setRemarks(remarks);
+            } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+
+        return user;
+    }
+    /*public static User parse(JSONObject json) {
+        User user = null;
+        try {
             JSONArray jsonArray = json.getJSONArray("data");
             if (jsonArray.length() == 1) {
                 JSONObject jsonObject = jsonArray.getJSONObject(0);
@@ -39,7 +69,7 @@ public class UserParser {
             e.printStackTrace();
         }
         return user;
-    }
+    }*/
     /*JsonObject json = new JsonObject(response);
 
     JsonObject data = json.getJsonObject("data");

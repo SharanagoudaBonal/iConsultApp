@@ -1,6 +1,8 @@
 package com.example.i20088.iconsultapp.Network;
 
 
+import android.content.Context;
+
 import com.example.i20088.iconsultapp.Model.User;
 
 public class UserManager {
@@ -23,4 +25,5 @@ public class UserManager {
     public void setUser(User user) {
         this.user = user;
     }
+
 }

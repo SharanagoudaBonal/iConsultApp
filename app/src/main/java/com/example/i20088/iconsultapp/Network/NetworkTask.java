@@ -92,8 +92,9 @@ public class NetworkTask extends AsyncTask<String, Void, JSONObject> {
                     jsonObject = new JSONObject(result);
                 }
                else if (json instanceof JSONObject) {
+                     System.out.println("Result === JSonObj String === "+result);
                     jsonObject = new JSONObject(result);
-                    System.out.println("Result === JSonObj === "+result);
+                    System.out.println("Result === JSonObj === "+jsonObject.toString());
                 }
             }
         } catch (MalformedURLException e) {

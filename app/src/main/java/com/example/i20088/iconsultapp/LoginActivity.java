@@ -71,9 +71,6 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Use
         progressDialog.setMessage("Logging...");
         progressDialog.show();
 
-
-        // TODO: Implement your own authentication logic here.
-
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
@@ -104,7 +101,6 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Use
         boolean shouldEnable = !emailField.getText().toString().isEmpty() && !passwordField.getText().toString().isEmpty();
         enablelogIn(shouldEnable);
     }
-
     @Override
     public void afterTextChanged(Editable editable) {
 
@@ -143,13 +139,12 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Use
             emailField.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 12) {
-            passwordField.setError("between 4 and 10 alphanumeric characters");
+        if (password.isEmpty() || password.length() < 6 || password.length() > 12) {
+            passwordField.setError("between 6 and 10 alphanumeric characters");
             valid = false;
         } else {
             passwordField.setError(null);
         }
-
         return valid;
     }
 }
