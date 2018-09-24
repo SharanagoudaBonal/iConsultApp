@@ -9,19 +9,23 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.i20088.iconsultapp.Delegates.PatientResponse;
+import com.example.i20088.iconsultapp.Delegates.UserResponse;
 import com.example.i20088.iconsultapp.Manager.PatientManager;
 import com.example.i20088.iconsultapp.Model.Patient;
+import com.example.i20088.iconsultapp.Model.User;
 import com.example.i20088.iconsultapp.Network.NetworkManager;
+import com.example.i20088.iconsultapp.Network.UserManager;
 
-public class SignUpActivity extends AppCompatActivity implements TextWatcher, PatientResponse{
+public class SignUpActivity extends AppCompatActivity implements TextWatcher, UserResponse {
     private static final String TAG = "SignUpActivity";
-    private EditText fName,lName;
-    private EditText emailField,passwordField,phoneNo,gpsurgeryField,gpsurgpnamegeryField,remarksField;
-    private Button submitButton, cancelButton;
+    private EditText fName, lName;
+    private EditText emailField, passwordField, phoneNo, gpNameField, gpsurgeryField, remarksField;
+    private Button submitButton, cancelButton, checkBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,7 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Pa
         setContentView(R.layout.activity_signup);
         initializeUI();
     }
+
     private View.OnClickListener buttonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -44,87 +49,71 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Pa
         }
     };
 
-    public void initializeUI()
-    {
+    public void initializeUI() {
         fName = (EditText) findViewById(R.id.fName);
         lName = (EditText) findViewById(R.id.lName);
         emailField = (EditText) findViewById(R.id.emailField);
         passwordField = (EditText) findViewById(R.id.passwordField);
         phoneNo = (EditText) findViewById(R.id.phoneField);
+        gpNameField = (EditText) findViewById(R.id.gpNameField);
         gpsurgeryField = (EditText) findViewById(R.id.gpsurgeryField);
-        gpsurgpnamegeryField = (EditText) findViewById(R.id.gpsurgeryField);
         remarksField = (EditText) findViewById(R.id.remarkField);
         submitButton = (Button) findViewById(R.id.submitButton);
         cancelButton = (Button) findViewById(R.id.cancelButton);
+        checkBox = (CheckBox) findViewById(R.id.checkBoxField);
 
         enableSubmit(false);
+        checkBox.setEnabled(false);
         fName.addTextChangedListener(this);
         lName.addTextChangedListener(this);
         emailField.addTextChangedListener(this);
         passwordField.addTextChangedListener(this);
         phoneNo.addTextChangedListener(this);
+        gpNameField.addTextChangedListener(this);
         gpsurgeryField.addTextChangedListener(this);
-        gpsurgpnamegeryField.addTextChangedListener(this);
         remarksField.addTextChangedListener(this);
-
+        checkBox.addTextChangedListener(this);
         submitButton.setOnClickListener(buttonListener);
+        checkBox.setEnabled(true);
         submitButton.setEnabled(true);
     }
-    private void submitButtonTapped(View view) {
-        Log.d(TAG, "SignUp");
 
-        if (!validate()) {
-            onSignUpFailed();
-            return;
-        }
+    private void submitButtonTapped(View view) {
 
         submitButton.setEnabled(false);
-
-        final ProgressDialog progressDialog = new ProgressDialog(SignUpActivity.this,
-                R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("SigningUp...");
-        progressDialog.show();
-
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onSignUpSuccess or onSignUpFailed
-                        onSignUpSuccess();
-                        // onSignUpFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
-    }
-    private void enableSubmit(boolean shouldEnable) {
-        submitButton.setEnabled(shouldEnable);
-        int color = shouldEnable ? R.color.colorTheme : R.color.colorDisabledButton;
-        submitButton.setBackgroundResource(color);
-    }
-    public void onSignUpSuccess() {
+        checkBox.setEnabled(false);
         String firstname = fName.getText().toString().trim();
         String lastname = lName.getText().toString().trim();
         String email = emailField.getText().toString().trim();
         String password = passwordField.getText().toString().trim();
         String phone = phoneNo.getText().toString().trim();
+        String gpname = gpNameField.getText().toString().trim();
         String gpsurgery = gpsurgeryField.getText().toString().trim();
-        String gpsurgpnamegery = gpsurgpnamegeryField.getText().toString().trim();
         String remarks = remarksField.getText().toString().trim();
         submitButton.setEnabled(true);
+        checkBox.setEnabled(true);
         NetworkManager manager = new NetworkManager(this);
-        manager.requetCreatePatient(firstname, lastname, email, password, phone, gpsurgery, gpsurgpnamegery, remarks);
+        manager.requetCreateUser(firstname, lastname, email, password, phone, gpname, gpsurgery, remarks);
         finish();
     }
-    public void onSignUpFailed() {
-        Toast.makeText(getBaseContext(), "SignUp failed, Enter Valid email or password", Toast.LENGTH_LONG).show();
 
-        submitButton.setEnabled(true);
+    private void enableSubmit(boolean shouldEnable) {
+        submitButton.setEnabled(shouldEnable);
+        int color = shouldEnable ? R.color.colorTheme : R.color.colorDisabledButton;
+        submitButton.setBackgroundResource(color);
     }
+
     @Override
-    public void didGetPatient(Patient patient) {
-        Intent intent = new Intent(this, MainActivity.class);
-        PatientManager.getInstance().setPatient(patient);
-        startActivity(intent);
+    public void didGetUser(User user) {
+        boolean isUser = UserManager.getInstance().isUser();
+        if (isUser) {
+            UserManager.getInstance().createUser(this);
+            Intent intent = new Intent(this, LandingActivity.class);
+            UserManager.getInstance().setUser(user);
+            startActivity(intent);
+        } else {
+            Toast.makeText(getApplicationContext(), "STRING MESSAGE", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -135,33 +124,13 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Pa
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         boolean shouldEnable = !fName.getText().toString().isEmpty() && !lName.getText().toString().isEmpty() && !emailField.getText().toString().isEmpty() && !passwordField.getText().toString().isEmpty()
-                && !phoneNo.getText().toString().isEmpty() && !gpsurgeryField.getText().toString().isEmpty() && !gpsurgpnamegeryField.getText().toString().isEmpty() && !remarksField.getText().toString().isEmpty();
+                && !phoneNo.getText().toString().isEmpty() && !gpNameField.getText().toString().isEmpty() && !gpsurgeryField.getText().toString().isEmpty() && !remarksField.getText().toString().isEmpty()
+        && !fName.getText().toString().isEmpty();
         enableSubmit(shouldEnable);
     }
 
     @Override
     public void afterTextChanged(Editable s) {
 
-    }
-    public boolean validate() {
-        boolean valid = true;
-
-        String email = emailField.getText().toString().trim();
-        String password = passwordField.getText().toString().trim();
-
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailField.setError("enter a valid email address");
-            valid = false;
-        } else {
-            emailField.setError(null);
-        }
-
-        if (password.isEmpty() || password.length() < 4 || password.length() > 12) {
-            passwordField.setError("between 4 and 10 alphanumeric characters");
-            valid = false;
-        } else {
-            passwordField.setError(null);
-        }
-        return valid;
     }
 }

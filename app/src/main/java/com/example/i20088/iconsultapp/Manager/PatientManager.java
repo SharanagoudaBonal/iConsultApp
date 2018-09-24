@@ -25,7 +25,7 @@ public class PatientManager {
     public void setPatient(Patient patient) {
         this.patient = patient;
     }
-    public void createPatient(Context context){
+   /* public void createPatient(Context context){
         NetworkManager networkManager = new NetworkManager(context);
         String firstName = PatientManager.getInstance().getPatient().getFirstname();
         String lastName = PatientManager.getInstance().getPatient().getLastName();
@@ -36,5 +36,5 @@ public class PatientManager {
         String gpsurgpnamegery = PatientManager.getInstance().getPatient().getGpsurgpnamegery();
         String remarks = PatientManager.getInstance().getPatient().getRemarks();
         networkManager.requetCreatePatient(firstName, lastName, email, password, phone, gpsurgery, gpsurgpnamegery, remarks);
-    }
+    }*/
 }

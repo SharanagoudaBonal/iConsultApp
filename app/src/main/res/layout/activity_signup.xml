@@ -108,7 +108,7 @@
         app:layout_constraintVertical_bias="0.451" />
 
     <EditText
-        android:id="@+id/gpsurgeryField"
+        android:id="@+id/gpNameField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="28dp"
@@ -118,7 +118,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="GP Surgery"
+        android:hint="GP Surgery Name"
         android:inputType="textFilter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -128,7 +128,7 @@
         app:layout_constraintVertical_bias="0.571" />
 
     <EditText
-        android:id="@+id/gpsurgpnamegeryField"
+        android:id="@+id/gpsurgeryField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"

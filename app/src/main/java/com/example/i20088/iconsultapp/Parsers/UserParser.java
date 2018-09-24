@@ -16,20 +16,22 @@ public class UserParser {
                 String email = json.isNull("email") ? "" : json.getString("email");
                 String phone = json.isNull("phone") ? "" : json.getString("phone");
                 String status = json.isNull("status") ? "" : json.getString("status");
+                String gpname = json.isNull("gpname") ? "" : json.getString("gpname");
                 String gpsurgery = json.isNull("gpsurgery") ? "" : json.getString("gpsurgery");
-                String gpsurgpnamegery = json.isNull("gpsurgpnamegery") ? "" : json.getString("gpsurgpnamegery");
                 //  String userType = jsonObject.isNull("userType") ? "" : jsonObject.getString("userType");
                 String remarks = json.isNull("remarks") ? "" : json.getString("remarks");
-
-                user = new User();
+              // boolean isPatient = true;
+          //  Boolean userType = type.get('userType').equals("1") ? true : false;
+                user= new User();
+               // user = new User(userId,firstName,lastName,email,phone,status,gpname,gpsurgery,remarks);
                 user.setUserId(userId);
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
                 user.setEmail(email);
                 user.setPhone(phone);
                 user.setStatus(status);
+                user.setGpname(gpname);
                 user.setGpsurgery(gpsurgery);
-                user.setGpsurgpnamegery(gpsurgpnamegery);
                 user.setRemarks(remarks);
             } catch (JSONException e1) {
             e1.printStackTrace();
@@ -37,6 +39,7 @@ public class UserParser {
 
         return user;
     }
+
     /*public static User parse(JSONObject json) {
         User user = null;
         try {

@@ -22,8 +22,24 @@ public class UserManager {
         return user;
     }
 
+    public boolean isUser(){
+        return user != null;
+    }
+
     public void setUser(User user) {
         this.user = user;
+    }
+    public void createUser(Context context){
+        NetworkManager networkManager = new NetworkManager(context);
+        String firstName = UserManager.getInstance().getUser().getFirstName();
+        String lastName = UserManager.getInstance().getUser().getLastName();
+        String email = UserManager.getInstance().getUser().getEmail();
+        String password = UserManager.getInstance().getUser().getPassword();
+        String phone = UserManager.getInstance().getUser().getPhone();
+        String gpName = UserManager.getInstance().getUser().getGpname();
+        String gpsurgery = UserManager.getInstance().getUser().getGpsurgery();
+        String remarks = UserManager.getInstance().getUser().getRemarks();
+        networkManager.requetCreateUser(firstName, lastName, email, password, phone, gpName, gpsurgery, remarks);
     }
 
 }

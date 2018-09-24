@@ -36,7 +36,6 @@ public class NetworkTask extends AsyncTask<String, Void, JSONObject> {
     public NetworkTask() {
 
     }
-
     @Override
     protected void onPreExecute() {
     }
@@ -49,14 +48,16 @@ public class NetworkTask extends AsyncTask<String, Void, JSONObject> {
         String result = null;
         String inputLine = null;
         JSONObject jsonObject = null;
-        Log.d("NetworkTask", "urlString = " + urlString);
-        Log.d("NetworkTask", "httpMethod = " + httpMethod);
+        System.out.println("urlString "+urlString);
+        System.out.println("httpMethod "+httpMethod);
         HttpURLConnection connection = null;
         try {
             URL url = new URL(urlString);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(httpMethod);
             connection.setRequestProperty("Content-Type", "application/json");
+            String authValue = OAuthConstants.tokenType + " " + OAuthConstants.token;
+            connection.setRequestProperty("Authorization", authValue);
 
 
             switch (httpMethod) {
@@ -72,6 +73,7 @@ public class NetworkTask extends AsyncTask<String, Void, JSONObject> {
             connection.connect();
 
             int responseCode = connection.getResponseCode();
+            System.out.println("RespCode==---------- "+responseCode);
             if (responseCode == HttpURLConnection.HTTP_OK) {
 
                 InputStreamReader streamReader = new InputStreamReader(connection.getInputStream());
@@ -84,17 +86,19 @@ public class NetworkTask extends AsyncTask<String, Void, JSONObject> {
                 reader.close();
                 streamReader.close();
                 result = stringBuilder.toString();
-
+                System.out.println("Result------ "+result);
                 Object json = new JSONTokener(result).nextValue();
-                 if (json instanceof JSONArray) {
-                    System.out.println("Result -----JsonArray ------ "+result);
+                if (json instanceof JSONArray) {
+                    Log.d("NetworkTask", "Result = "+result);
+                    System.out.println("Result JsonArray ===== "+result);
                     result = "{ data: " + result + "}";
                     jsonObject = new JSONObject(result);
+                    Log.d("NetworkTask", "JsonArray result ==== "+result);
                 }
-               else if (json instanceof JSONObject) {
-                     System.out.println("Result === JSonObj String === "+result);
+                else if (json instanceof JSONObject) {
+                    System.out.println("Result JsonObject ======  "+result);
+                    Log.d("NetworkTask", "JSonObject result ==== "+result);
                     jsonObject = new JSONObject(result);
-                    System.out.println("Result === JSonObj === "+jsonObject.toString());
                 }
             }
         } catch (MalformedURLException e) {
@@ -113,7 +117,7 @@ public class NetworkTask extends AsyncTask<String, Void, JSONObject> {
             if (jsonObject == null) {
                 JSONObject object = new JSONObject();
                 try {
-                   object= object.put("data", result);
+                    object= object.put("data", result);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -125,6 +129,8 @@ public class NetworkTask extends AsyncTask<String, Void, JSONObject> {
     @Override
     protected void onPostExecute(JSONObject jsonObject) {
         RequestType requestType = RequestType.getRequestType(this.requestTypeString);
+        System.out.println("NetworkTask--- RequestType "+requestType);
+        System.out.println("NetworkTask--- JsonBody "+jsonObject);
         callback.networkResponse(requestType, jsonObject);
     }
 

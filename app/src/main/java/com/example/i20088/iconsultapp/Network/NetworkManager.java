@@ -41,22 +41,28 @@ public class NetworkManager implements NetworkTaskResult {
     public void requestLoginUser(String username, String password) {
         this.username = username;
         this.password = password;
-        isLoginRequest = true;
+        System.out.println("Nm========== reqLogin " +username + " pass " +password);
+       /* isLoginRequest = true;
 
         if (!isLoginRequest) {
             requestLoginUser(this.username, this.password);
             return;
-        }
+        }*/
         JSONObject jsonObject = ApiLookupUtil.lookUpRequest(context, RequestType.login);
         try {
             String urlpart = jsonObject.getString(URL_PART_KEY);
             String httpMethod = jsonObject.getString(HTTP_METHOD_KEY);
             JSONObject bodyObject = jsonObject.getJSONObject(HTTP_BODY_KEY);
+            Log.d("NetworkManager","bodyObject"+bodyObject);
             bodyObject.put("username", username);
             bodyObject.put("password", password);
+            System.out.println("NM ==== Inside ReqLogin "+username+" pass "+password);
 
             String completeApiUrl = getBaseUrl() + urlpart;
             String bodyString = bodyObject.toString();
+
+            System.out.println("ApiUrl "+completeApiUrl);
+            System.out.println("bodyString "+bodyString);
 
             new NetworkTask(this).execute(RequestType.login.name(), httpMethod, completeApiUrl, bodyString);
 
@@ -64,7 +70,7 @@ public class NetworkManager implements NetworkTaskResult {
             e.printStackTrace();
         }
     }
-    public void requetCreatePatient(String firstname, String lastname,String email,String password,String phone,String gpsurgery,String gpsurgpnamegery,String remarks) {
+    public void requetCreateUser(String firstname, String lastname,String email,String password,String phone,String gpname,String gpsurgery,String remarks) {
         JSONObject jsonObject = ApiLookupUtil.lookUpRequest(context, RequestType.userCreation);
         try {
             System.out.println("Request create patient -------------- starated");
@@ -77,7 +83,7 @@ public class NetworkManager implements NetworkTaskResult {
             object.put("password", password);
             object.put("phone", phone);
             object.put("gpsurgery", gpsurgery);
-            object.put("gpsurgpnamegery", gpsurgpnamegery);
+            object.put("gpname", gpname);
             object.put("remarks", remarks);
 
             String completApiUrl = getBaseUrl()+urlpart;
@@ -90,21 +96,30 @@ public class NetworkManager implements NetworkTaskResult {
         }
     }
     public void networkResponse(RequestType requestType, JSONObject jsonObject) {
-        Log.d("ManagerTask", jsonObject.toString());
+        Log.d("ManagerTask === ","jsonobject"+ jsonObject.toString());
+        Log.d("NetworkManager ===","requesttype"+ requestType.toString());
         switch (requestType) {
             case login:
                 User user = UserParser.parse(jsonObject);
+                System.out.println("Userparser------"+jsonObject);
                 if (user != null) {
+                    System.out.println("user------"+user);
                     ((UserResponse) context).didGetUser(user);
                 }
                 break;
             case userCreation:
+                User createUser = UserParser.parse(jsonObject);
+                UserManager.getInstance().setUser(createUser);
+                Intent userIntent = new Intent();
+                userIntent.setAction("setUserState");
+                context.sendBroadcast(userIntent);
+           /* case userCreation:
                 Patient createPatient = PatientParser.parse(jsonObject);
                 PatientManager.getInstance().setPatient(createPatient);
                 Intent patientIntent = new Intent();
                 patientIntent.setAction("setPatientState");
                 context.sendBroadcast(patientIntent);
-                break;
+                break;*/
             default:
                 break;
         }

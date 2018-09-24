@@ -1,6 +1,5 @@
 package com.example.i20088.iconsultapp;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -53,33 +52,15 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Use
         loginButton.setOnClickListener(buttonListener);
         emailField.addTextChangedListener(this);
         passwordField.addTextChangedListener(this);
+        loginButton.setEnabled(true);
     }
 
     private void logInTapped(View view) {
-        Log.d(TAG, "Login");
 
-        if (!validate()) {
-            onLoginFailed();
-            return;
-        }
-
-        loginButton.setEnabled(false);
-
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-                R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Logging...");
-        progressDialog.show();
-
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
+        String email = emailField.getText().toString().trim();
+        String password = passwordField.getText().toString().trim();
+        NetworkManager manager = new NetworkManager(this);
+        manager.requestLoginUser(email, password);
 
     }
 
@@ -88,8 +69,6 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Use
         int color = shouldEnable ? R.color.colorTheme : R.color.colorDisabledButton;
         loginButton.setBackgroundResource(color);
     }
-
-
 
     @Override
     public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
@@ -101,6 +80,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Use
         boolean shouldEnable = !emailField.getText().toString().isEmpty() && !passwordField.getText().toString().isEmpty();
         enablelogIn(shouldEnable);
     }
+
     @Override
     public void afterTextChanged(Editable editable) {
 
@@ -110,23 +90,17 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Use
     public void didGetUser(User user) {
         Intent intent = new Intent(this, MainActivity.class);
         UserManager.getInstance().setUser(user);
+        //  LocationTrackerService.userId = user.getUserId();
         startActivity(intent);
     }
-    public void onLoginSuccess() {
-        String email = emailField.getText().toString().trim();
-        String password = passwordField.getText().toString().trim();
-        loginButton.setEnabled(true);
-        NetworkManager manager = new NetworkManager(this);
-        manager.requestLoginUser(email, password);
-        finish();
-    }
 
-    public void onLoginFailed() {
+
+    /*public void onLoginFailed() {
         Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
 
-        loginButton.setEnabled(true);
-    }
-    public boolean validate() {
+        loginButton.setEnabled(false);
+    */
+    /*public boolean validate() {
         boolean valid = true;
 
         String email = emailField.getText().toString().trim();
@@ -146,5 +120,5 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Use
             passwordField.setError(null);
         }
         return valid;
-    }
+    }*/
 }
