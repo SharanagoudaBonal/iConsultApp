@@ -36,7 +36,7 @@ public class UserParser {
             } catch (JSONException e1) {
             e1.printStackTrace();
         }
-
+        System.out.println("User parser == "+user);
         return user;
     }
 

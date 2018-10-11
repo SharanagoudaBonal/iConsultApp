@@ -17,9 +17,42 @@
             "email": "%s",
             "password": "%s",
             "phone" : "%s",
+            "status" : "initial",
             "gpsurgery": "%s",
             "gpname": "%s",
+            "patordoc": "1",
             "remarks": "%s"
+        }
+    },
+    "allAppointments":{
+        "urlpart": "api/Schedule/ViewAll",
+        "method": "GET"
+    },
+    "allDoctors": {
+        "urlpart": "api/User/PatDoc/0",
+        "method": "GET"
+    },
+    "allHospitals": {
+       "urlpart": "api/Common/GPSurgery/ViewAll",
+        "method": "GET"
+    },
+    "allPatients": {
+        "urlpart": "api/User/PatDoc/1",
+        "method": "GET"
+    },
+    "scheduleAppointments": {
+        "urlpart": "api//Schedule/Create",
+        "method": "GET"
+    },
+    "createAppointment": {
+        "urlpart": "api/Schedule/Create",
+        "method": "POST",
+        "body": {
+            "patientId": "%s",
+            "gpId": "%s",
+            "roomname": "%s",
+            "schdate": "%s",
+            "status": "Initiated"
         }
     }
 }

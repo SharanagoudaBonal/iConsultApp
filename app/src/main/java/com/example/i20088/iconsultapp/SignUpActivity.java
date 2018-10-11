@@ -1,32 +1,34 @@
 package com.example.i20088.iconsultapp;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.i20088.iconsultapp.Delegates.PatientResponse;
+import com.example.i20088.iconsultapp.Delegates.DoctorResponse;
 import com.example.i20088.iconsultapp.Delegates.UserResponse;
-import com.example.i20088.iconsultapp.Manager.PatientManager;
-import com.example.i20088.iconsultapp.Model.Patient;
+import com.example.i20088.iconsultapp.Manager.DoctorManager;
+import com.example.i20088.iconsultapp.Model.Doctor;
 import com.example.i20088.iconsultapp.Model.User;
 import com.example.i20088.iconsultapp.Network.NetworkManager;
-import com.example.i20088.iconsultapp.Network.UserManager;
+import com.example.i20088.iconsultapp.Manager.UserManager;
+
+import java.util.ArrayList;
 
 public class SignUpActivity extends AppCompatActivity implements TextWatcher, UserResponse {
     private static final String TAG = "SignUpActivity";
     private EditText fName, lName;
     private EditText emailField, passwordField, phoneNo, gpNameField, gpsurgeryField, remarksField;
     private Button submitButton, cancelButton, checkBox;
-
+    private ListView listView;
+    private Doctor doctor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,6 +133,15 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Us
 
     @Override
     public void afterTextChanged(Editable s) {
+    }
+
+    private void fetchHospital(){
 
     }
+    private void fetchDoctor(){
+
+       String doctorName;
+    }
+
+
 }

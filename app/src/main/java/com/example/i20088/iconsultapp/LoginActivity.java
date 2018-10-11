@@ -5,16 +5,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.i20088.iconsultapp.Delegates.UserResponse;
 import com.example.i20088.iconsultapp.Model.User;
 import com.example.i20088.iconsultapp.Network.NetworkManager;
-import com.example.i20088.iconsultapp.Network.UserManager;
+import com.example.i20088.iconsultapp.Manager.UserManager;
 
 public class LoginActivity extends AppCompatActivity implements TextWatcher, UserResponse {
 
@@ -61,7 +59,6 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Use
         String password = passwordField.getText().toString().trim();
         NetworkManager manager = new NetworkManager(this);
         manager.requestLoginUser(email, password);
-
     }
 
     private void enablelogIn(boolean shouldEnable) {
@@ -90,7 +87,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Use
     public void didGetUser(User user) {
         Intent intent = new Intent(this, MainActivity.class);
         UserManager.getInstance().setUser(user);
-        //  LocationTrackerService.userId = user.getUserId();
+        //LocationTrackerService.userId = user.getUserId();
         startActivity(intent);
     }
 

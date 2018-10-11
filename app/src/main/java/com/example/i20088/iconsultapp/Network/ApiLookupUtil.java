@@ -13,6 +13,11 @@ public class ApiLookupUtil {
     public static final String baseUrlKey = "baseUrl";
     private static final String loginKey = "login";
     private static final String userCreationKey = "userCreation";
+    private static final String allAppointmenstKey = "allAppointments";
+    private static final String allDoctorsKey = "allDoctors";
+    private static final String allPatientsKey = "allPatients";
+    private static final String allHospitalsKey = "allHospitals";
+    private static final String createAppointmentKey = "createAppointment";
     public static String getBaseUrl(Context context){
         String baseUrl=null;
         JSONObject requests = loadRequestsAsset(context);
@@ -33,6 +38,18 @@ public class ApiLookupUtil {
                     break;
                 case userCreation:
                     jsonTypeObject = getRequestJson(requests, userCreationKey);
+                    break;
+                case allAppointments:
+                    jsonTypeObject = getRequestJson(requests, allAppointmenstKey);
+                    break;
+                case allDoctors:
+                    jsonTypeObject = getRequestJson(requests, allDoctorsKey);
+                    break;
+                case allPatients:
+                    jsonTypeObject = getRequestJson(requests, allPatientsKey);
+                    break;
+                case createAppointment:
+                    jsonTypeObject = getRequestJson(requests, createAppointmentKey);
                     break;
                     default:
                         break;

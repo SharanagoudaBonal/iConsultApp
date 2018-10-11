@@ -1,9 +1,10 @@
-package com.example.i20088.iconsultapp.Network;
+package com.example.i20088.iconsultapp.Manager;
 
 
 import android.content.Context;
 
 import com.example.i20088.iconsultapp.Model.User;
+import com.example.i20088.iconsultapp.Network.NetworkManager;
 
 public class UserManager {
     private static UserManager instance = null;
@@ -40,6 +41,6 @@ public class UserManager {
         String gpsurgery = UserManager.getInstance().getUser().getGpsurgery();
         String remarks = UserManager.getInstance().getUser().getRemarks();
         networkManager.requetCreateUser(firstName, lastName, email, password, phone, gpName, gpsurgery, remarks);
+        System.out.println("User manager "+firstName +" gpname "+gpName);
     }
-
 }

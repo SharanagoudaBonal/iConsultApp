@@ -59,7 +59,6 @@ public class NetworkTask extends AsyncTask<String, Void, JSONObject> {
             String authValue = OAuthConstants.tokenType + " " + OAuthConstants.token;
             connection.setRequestProperty("Authorization", authValue);
 
-
             switch (httpMethod) {
                 case "POST":
                     prepareOutputStream(connection, params[httpBodyIndex]);
@@ -117,7 +116,7 @@ public class NetworkTask extends AsyncTask<String, Void, JSONObject> {
             if (jsonObject == null) {
                 JSONObject object = new JSONObject();
                 try {
-                    object= object.put("data", result);
+                    object = object.put("data", result);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -133,7 +132,6 @@ public class NetworkTask extends AsyncTask<String, Void, JSONObject> {
         System.out.println("NetworkTask--- JsonBody "+jsonObject);
         callback.networkResponse(requestType, jsonObject);
     }
-
     private void prepareOutputStream(HttpURLConnection connection, String bodyString) {
         try {
             OutputStreamWriter streamWriter = new OutputStreamWriter(connection.getOutputStream());
