@@ -6,9 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
@@ -41,14 +44,14 @@ import java.util.Calendar;
 
 public class CreateAppointment extends AppCompatActivity implements TextWatcher, View.OnClickListener, AppResponse, AdapterView.OnItemSelectedListener {
     private static final String TAG = "CreateAppointment";
-   // private EditText gpName;
+
     Spinner spin;
     private Button subButton, canslButton;
     private Button btnDatePicker, btnTimePicker;
     private  EditText txtDate, txtTime;
     private int mYear, mMonth, mDay, mHour, mMinute;
-    String[] gpName={"--Select GpName--","Dr. Surekha MuniRaj","Dr. John D Souza","Dr. Dhillon D Souza","Dr. Steve Jobs"};
-   String[] gp={"1","3","4","5","14"};
+    String[] gpName={"Dr. Surekha MuniRaj","Dr. John D Souza","Dr. Dhillon D Souza","Dr. Steve Jobs"};
+    String[] gp={"3","4","5","14"};
     User user = UserManager.getInstance().getUser();
     Doctor doctor = DoctorManager.getInstance().getDoctor();
     private static ArrayList<Appointment> appointments1=new ArrayList<Appointment>();
@@ -66,6 +69,7 @@ public class CreateAppointment extends AppCompatActivity implements TextWatcher,
         ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,gpName);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin.setAdapter(aa);
+
         initializeUI();
 
     }
@@ -82,13 +86,27 @@ public class CreateAppointment extends AppCompatActivity implements TextWatcher,
         }
     };
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.action_logout:
+                //Toast.makeText(getApplicationContext(),"LogOut",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this,LoginActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     public void initializeUI(){
 
         txtDate=(EditText)findViewById(R.id.date);
         txtTime=(EditText)findViewById(R.id.time);
-        //spin = (Spinner) findViewById(R.id.simpleSpinner);
-       // spin.setOnItemSelectedListener(this);
-       // gpName = (EditText)findViewById(R.id.gpNameText);
         btnDatePicker=(Button)findViewById(R.id.btn_date);
         btnTimePicker=(Button)findViewById(R.id.btn_time);
         subButton = (Button)findViewById(R.id.submitButton);
@@ -98,7 +116,6 @@ public class CreateAppointment extends AppCompatActivity implements TextWatcher,
 
         txtDate.addTextChangedListener(this);
         txtTime.addTextChangedListener(this);
-       // spin.addTextChangedListener(this);
         subButton.setOnClickListener(buttonListener);
         canslButton.setOnClickListener(buttonListener);
         subButton.setEnabled(true);
@@ -107,31 +124,35 @@ public class CreateAppointment extends AppCompatActivity implements TextWatcher,
         btnTimePicker.setOnClickListener(this);
 
     }
-    //String patientId;
-    //String gpId1;
+    String gpId12;
+    private String gpNameId(){
+        TextView textView = (TextView)spin.getSelectedView();
+        String gpId1 = textView.getText().toString().trim();
+        for (String s: gpName)
+        {
+            for(String s1:gp){
+                if(s.equals(gpId1)) {
+                    return gpId12=   s1;
+
+                }
+            }
+        }return gpId12;
+    }
     private void submitButtonTapped(View view) {
         subButton.setEnabled(false);
         String patientId = user.getUserId();
         TextView textView = (TextView)spin.getSelectedView();
+        String gpId1 = textView.getText().toString().trim();
 
-        String gpId = textView.getText().toString().trim();
-        //String gpId = doctorId()+"";
+        String gpId=gpNameId();
         String roomname = RandomString.randomString(10);
         System.out.println("gpId "+gpId +" pat  "+patientId);
-        System.out.println("dateeeeeeeeeeeee "+txtDate.getText());
-        System.out.println("dateeeeeeeeeeeee "+txtTime.getText());
         String schdate = ""+txtDate.getText().toString().trim()+"T"+txtTime.getText()+"".toString().trim();
         subButton.setEnabled(true);
         NetworkManager nm = new NetworkManager(this);
-        //nm.createAppointment(patientId, gpId, roomname, schdate);
-
-       // subButton = (Button) findViewById(R.id.submitButton);
-       // Intent intent = new Intent(this, CreateAppointment.class);
-        //startActivity(intent);
+        nm.createAppointment(patientId, gpId, roomname, schdate);
         finish();
     }
-   // int dId;
-    //JSONObject jsonObject;
    /* public int doctorId()
     {
 
@@ -176,11 +197,11 @@ public class CreateAppointment extends AppCompatActivity implements TextWatcher,
         boolean isUser = AppManager.getInstance().isApp();
         if (isUser) {
             AppManager.getInstance().createAppointment(this);
-            Intent intent = new Intent(this, AppAdapter.class);
+            Intent intent = new Intent(this, LoginActivity.class);
             AppManager.getInstance().setApp(app);
             startActivity(intent);
         } else {
-            Toast.makeText(getApplicationContext(), "STRING MESSAGE", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "ENTER VALID DATA", Toast.LENGTH_SHORT).show();
         }
     }
     public void onItemSelected(AdapterView<?> arg0, View arg1, int position,long id) {
@@ -189,12 +210,11 @@ public class CreateAppointment extends AppCompatActivity implements TextWatcher,
 
     @Override
     public void onNothingSelected(AdapterView<?> arg0) {
-        // TODO Auto-generated method stub
+
     }
     @Override
     public void onClick(View v) {
         if (v == btnDatePicker) {
-            // Get Current Date
             final Calendar c = Calendar.getInstance();
             mYear = c.get(Calendar.YEAR);
             mMonth = c.get(Calendar.MONTH);
@@ -206,31 +226,23 @@ public class CreateAppointment extends AppCompatActivity implements TextWatcher,
                         @Override
                         public void onDateSet(DatePicker view, int year,
                                               int monthOfYear, int dayOfMonth) {
-
-                           // txtDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
                             txtDate.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
-
                         }
                     }, mYear, mMonth, mDay);
             datePickerDialog.show();
         }
         if (v == btnTimePicker) {
 
-            // Get Current Time
             final Calendar c = Calendar.getInstance();
             mHour = c.get(Calendar.HOUR_OF_DAY);
             mMinute = c.get(Calendar.MINUTE);
-
-            // Launch Time Picker Dialog
             TimePickerDialog timePickerDialog = new TimePickerDialog(this,
                     new TimePickerDialog.OnTimeSetListener() {
 
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay,
                                               int minute) {
-
-                           // txtTime.setText(hourOfDay + ":" + minute);
-                            txtTime.setText(hourOfDay + ":" + minute +":00.000Z");
+                            txtTime.setText(hourOfDay + ":" + minute);// +":00.000Z");
                         }
                     }, mHour, mMinute, false);
             timePickerDialog.show();

@@ -177,14 +177,12 @@ public class NetworkManager implements NetworkTaskResult {
     public void networkResponse(RequestType requestType, JSONObject jsonObject) {
         ArrayList<Doctor> doctors = new ArrayList<>();
         ArrayList<Appointment> appointments=new ArrayList<>();
-        Log.d("ManagerTask === ","jsonobject"+ jsonObject.toString());
+        Log.d("NetworkManager === ","jsonobject"+ jsonObject.toString());
         Log.d("NetworkManager ===","requesttype"+ requestType.toString());
         switch (requestType) {
             case login:
                 User user = UserParser.parse(jsonObject);
-                System.out.println("Userparser------"+jsonObject);
                 if (user != null) {
-                    System.out.println("user------"+user);
                     ((UserResponse) context).didGetUser(user);
                 }
                 break;

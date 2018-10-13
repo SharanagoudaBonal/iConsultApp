@@ -5,16 +5,19 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.i20088.iconsultapp.Model.User;
 import com.example.i20088.iconsultapp.Manager.UserManager;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
+public class MyProfile extends AppCompatActivity {
+    private static final String TAG = "MyProfile";
     private TextView firstName = null;
     private TextView lastName = null;
     private TextView emailId = null;
@@ -22,12 +25,11 @@ public class MainActivity extends AppCompatActivity {
     private TextView gpName = null;
     private TextView gpSurgery = null;
     private ImageView userImage = null;
-   private Button myAppointmentButton;
-   private FloatingActionButton actionButton;
+    private Button myAppointmentButton;
     User user = UserManager.getInstance().getUser();
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        @Override
+        protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
 
@@ -48,9 +50,6 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.appointmentsButton:
                     myAppointmentButtonTapped(view);
                     break;
-                case R.id.addAppointmentButton:
-                    addAppntButtonTapped(view);
-                    break;
                     default:
                         break;
             }
@@ -59,8 +58,21 @@ public class MainActivity extends AppCompatActivity {
     private void initializeUI() {
         myAppointmentButton = (Button) findViewById(R.id.appointmentsButton);
         myAppointmentButton.setOnClickListener(buttonListener);
-
-        actionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton2);
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.action_logout:
+               // Toast.makeText(getApplicationContext(),"LogOut",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this,LoginActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void  userProfile(){
@@ -91,11 +103,6 @@ if(user!=null) {
     private void myAppointmentButtonTapped(View view) {
         myAppointmentButton = (Button) findViewById(R.id.appointmentsButton);
         Intent intent = new Intent(this, MyAppoint.class);
-        startActivity(intent);
-    }
-    private void addAppntButtonTapped(View view) {
-        actionButton = (FloatingActionButton) findViewById(R.id.addAppointmentButton);
-        Intent intent = new Intent(this, CreateAppointment.class);
         startActivity(intent);
     }
 }

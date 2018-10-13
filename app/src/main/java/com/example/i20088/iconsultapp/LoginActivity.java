@@ -20,6 +20,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Use
     private EditText emailField;
     private EditText passwordField;
     private Button loginButton;
+    private Button cancelButton;
 
     private View.OnClickListener buttonListener = new View.OnClickListener() {
         @Override
@@ -27,6 +28,9 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Use
             switch (view.getId()) {
                 case R.id.loginButton:
                     logInTapped(view);
+                    break;
+                case R.id.cancelButton:
+                    cancelTapped(view);
                     break;
                 default:
                     break;
@@ -45,6 +49,8 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Use
         emailField = (EditText) findViewById(R.id.emailField);
         passwordField = (EditText) findViewById(R.id.passwordField);
         loginButton = (Button) findViewById(R.id.loginButton);
+        cancelButton = (Button) findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(buttonListener);
 
         enablelogIn(false);
         loginButton.setOnClickListener(buttonListener);
@@ -59,6 +65,10 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Use
         String password = passwordField.getText().toString().trim();
         NetworkManager manager = new NetworkManager(this);
         manager.requestLoginUser(email, password);
+    }
+    private void cancelTapped(View view){
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 
     private void enablelogIn(boolean shouldEnable) {
@@ -85,9 +95,8 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Use
 
     @Override
     public void didGetUser(User user) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MyProfile.class);
         UserManager.getInstance().setUser(user);
-        //LocationTrackerService.userId = user.getUserId();
         startActivity(intent);
     }
 

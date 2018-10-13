@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -26,7 +27,8 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Us
     private static final String TAG = "SignUpActivity";
     private EditText fName, lName;
     private EditText emailField, passwordField, phoneNo, gpNameField, gpsurgeryField, remarksField;
-    private Button submitButton, cancelButton, checkBox;
+    private Button submitButton, cancelButton;
+    private CheckBox checkBox;
     private ListView listView;
     private Doctor doctor;
     @Override
@@ -41,9 +43,7 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Us
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.submitButton:
-                    System.out.println("Button Listener=================");
                     submitButtonTapped(view);
-                    System.out.println("after Button Listener=================");
                     break;
                 default:
                     break;
@@ -65,7 +65,7 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Us
         checkBox = (CheckBox) findViewById(R.id.checkBoxField);
 
         enableSubmit(false);
-        checkBox.setEnabled(false);
+       // checkBox.setEnabled(false);
         fName.addTextChangedListener(this);
         lName.addTextChangedListener(this);
         emailField.addTextChangedListener(this);
@@ -76,10 +76,24 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Us
         remarksField.addTextChangedListener(this);
         checkBox.addTextChangedListener(this);
         submitButton.setOnClickListener(buttonListener);
-        checkBox.setEnabled(true);
+       // checkBox.setEnabled(true);
+        //Button mButton=(Button)findViewById( R.id.checkBoxField);
+         checkBox= ( CheckBox ) findViewById( R.id.checkBoxField);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                if ( isChecked )
+                {
+                    submitButton.setEnabled(true);
+
+                }else{
+                    submitButton.setEnabled(false);
+                }
+            }
+        });
         submitButton.setEnabled(true);
     }
-
     private void submitButtonTapped(View view) {
 
         submitButton.setEnabled(false);
@@ -92,8 +106,8 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Us
         String gpname = gpNameField.getText().toString().trim();
         String gpsurgery = gpsurgeryField.getText().toString().trim();
         String remarks = remarksField.getText().toString().trim();
-        submitButton.setEnabled(true);
         checkBox.setEnabled(true);
+        submitButton.setEnabled(true);
         NetworkManager manager = new NetworkManager(this);
         manager.requetCreateUser(firstname, lastname, email, password, phone, gpname, gpsurgery, remarks);
         finish();
@@ -113,9 +127,9 @@ public class SignUpActivity extends AppCompatActivity implements TextWatcher, Us
             Intent intent = new Intent(this, LandingActivity.class);
             UserManager.getInstance().setUser(user);
             startActivity(intent);
-        } else {
+        } /*else {
             Toast.makeText(getApplicationContext(), "STRING MESSAGE", Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
     @Override

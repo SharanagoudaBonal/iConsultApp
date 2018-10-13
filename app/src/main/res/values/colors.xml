@@ -7,5 +7,7 @@
     <color name="colorDisabledButton">#DBD7BA</color>
     <color name="primary">#E43F3F</color>
     <color name="iron">#CCCCCC</color>
+    <color name="colorDarkGrey">#A9A9A9</color>
     <color name="white">#FFFFFF</color>
+    <color name="whiteSmoke">#F5F5F5</color>
 </resources>

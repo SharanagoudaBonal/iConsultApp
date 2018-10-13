@@ -50,4 +50,5 @@ public class LandingActivity extends AppCompatActivity {
             Intent intent = new Intent(this, SignUpActivity.class);
             startActivity(intent);
         }
+
 }

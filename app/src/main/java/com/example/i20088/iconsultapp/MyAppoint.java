@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
@@ -86,6 +88,21 @@ public class MyAppoint extends AppCompatActivity implements AdapterView.OnItemCl
             }
         }
     };
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.action_logout:
+                // Toast.makeText(getApplicationContext(),"LogOut",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this,LoginActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     private void addAppntButtonTapped(View view) {
         actionButton = (FloatingActionButton) findViewById(R.id.addAppointmentButton);
         Intent intent = new Intent(this, CreateAppointment.class);
